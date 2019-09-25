@@ -46,6 +46,7 @@ export class SliderComponent extends React.Component<Props, State> {
 	handleFadeInAnimation = () => {
 		this.view.zoomIn().then((endState) => console.log(endState.finished ? 'finished' : 'cancelled'));
 	};
+
 	constructor(props: Props) {
 		super(props);
 		props.dataSource = [];
@@ -53,12 +54,11 @@ export class SliderComponent extends React.Component<Props, State> {
 	componentDidMount() {
 		this.setState({ dataSource: this.props.dataSource });
 	}
-	componentWillReceiveProps(nextProps: Readonly<ComponentProps>) {
-		alert('asaas');
-		if (this.state.dataSource !== this.props.dataSource) {
-			this.setState({ dataSource: this.props.dataSource });
-		}
-	}
+	// componentWillReceiveProps(nextProps: Readonly<ComponentProps>) {
+	// 	if (this.state.dataSource !== this.props.dataSource) {
+	// 		this.setState({ dataSource: this.props.dataSource });
+	// 	}
+	// }
 
 	private RenderBlock = ({ dataSource }) => (
 		<Animatable.View ref={this.handleViewRef} useNativeDriver={true} easing="ease-in">
