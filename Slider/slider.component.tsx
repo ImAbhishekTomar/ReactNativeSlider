@@ -13,7 +13,7 @@ import {
 	StyleSheet
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import { Typography } from '../../../core/themes/quibikTheam';
+import { Typography } from '../../core/themes/quibikTheam';
 import { createAnimatableComponent } from 'react-native-animatable';
 
 const { width } = Dimensions.get('window');
@@ -141,11 +141,6 @@ export class SliderComponent extends React.Component<Props, State> {
 		);
 	};
 
-	handleScroll(e: NativeSyntheticEvent<NativeScrollEvent>) {
-		this.handleFadeInAnimation();
-		Animated.event([ { nativeEvent: { contentOffset: { x: this.scrollX } } } ]);
-	}
-
 	renderIllustrations() {
 		return (
 			<View style={{ flex: 1, justifyContent: 'flex-start' }}>
@@ -158,10 +153,9 @@ export class SliderComponent extends React.Component<Props, State> {
 						scrollEventThrottle={16}
 						snapToAlignment="center"
 						data={this.state.dataSource}
-						//extraDate={this.state}
-						keyExtractor={(item, index) => index.toString()}
+						keyExtractor={(item, index) => `step-${index}`}
 						renderItem={({ item }) => this.renderListItems(item)}
-						onScroll={(e) => this.handleScroll(e)}
+						onScroll={Animated.event([ { nativeEvent: { contentOffset: { x: this.scrollX } } } ])}
 					/>
 				</View>
 				<View style={{ alignItems: 'center', alignSelf: 'center', justifyContent: 'center' }}>
