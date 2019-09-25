@@ -10,7 +10,8 @@ import {
 	NativeSyntheticEvent,
 	NativeScrollEvent,
 	ImageBackground,
-	StyleSheet
+	StyleSheet,
+	ViewToken
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { Typography } from '../../core/themes/quibikTheam';
@@ -49,11 +50,12 @@ export class SliderComponent extends React.Component<Props, State> {
 
 	constructor(props: Props) {
 		super(props);
-		props.dataSource = [];
 	}
+
 	componentDidMount() {
 		this.setState({ dataSource: this.props.dataSource });
 	}
+
 	// componentWillReceiveProps(nextProps: Readonly<ComponentProps>) {
 	// 	if (this.state.dataSource !== this.props.dataSource) {
 	// 		this.setState({ dataSource: this.props.dataSource });
@@ -146,6 +148,8 @@ export class SliderComponent extends React.Component<Props, State> {
 			<View style={{ flex: 1, justifyContent: 'flex-start' }}>
 				<View style={{ flex: 1 }}>
 					<FlatList
+						onViewableItemsChanged={this.handlerViewableItemsChanged}
+						viewabilityConfig={{ itemVisiblePercentThreshold: 50 }}
 						horizontal
 						pagingEnabled
 						scrollEnabled
@@ -153,9 +157,14 @@ export class SliderComponent extends React.Component<Props, State> {
 						scrollEventThrottle={16}
 						snapToAlignment="center"
 						data={this.state.dataSource}
-						keyExtractor={(item, index) => `step-${index}`}
+						keyExtractor={(item) => `${item.id}`}
+						//keyExtractor={(item, index) => `step-${index}`}
 						renderItem={({ item }) => this.renderListItems(item)}
-						onScroll={Animated.event([ { nativeEvent: { contentOffset: { x: this.scrollX } } } ])}
+						onScroll={Animated.event([
+							{
+								nativeEvent: { contentOffset: { x: this.scrollX } }
+							}
+						])}
 					/>
 				</View>
 				<View style={{ alignItems: 'center', alignSelf: 'center', justifyContent: 'center' }}>
@@ -164,6 +173,16 @@ export class SliderComponent extends React.Component<Props, State> {
 			</View>
 		);
 	}
+
+	private handlerViewableItemsChanged = (info: { viewableItems: ViewToken[]; changed: ViewToken[] }): void => {
+		var itemId = info.changed[0].item.id;
+		var currentItem = this.state.dataSource.find((item) => item.id == itemId);
+		this.props.onItemSlide(currentItem);
+		console.log('current itemsx%%%%%%%%', currentItem);
+		//console.log('item$$$$$$$$$$$', item);
+		console.log('viewableItems@@@@@@@@@', info.viewableItems);
+		console.log('changed@@@@@@@@@', info.changed);
+	};
 
 	private renderListItems(item: IDataSource): React.ReactElement {
 		return <this.RenderBlock dataSource={item} />;
