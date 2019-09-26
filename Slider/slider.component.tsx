@@ -178,10 +178,6 @@ export class SliderComponent extends React.Component<Props, State> {
 		var itemId = info.changed[0].item.id;
 		var currentItem = this.state.dataSource.find((item) => item.id == itemId);
 		this.props.onItemSlide(currentItem);
-		console.log('current itemsx%%%%%%%%', currentItem);
-		//console.log('item$$$$$$$$$$$', item);
-		console.log('viewableItems@@@@@@@@@', info.viewableItems);
-		console.log('changed@@@@@@@@@', info.changed);
 	};
 
 	private renderListItems(item: IDataSource): React.ReactElement {
